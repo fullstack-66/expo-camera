@@ -1,5 +1,11 @@
 import { Tabs } from "expo-router";
 
 export default function AppLayout() {
-  return <Tabs />;
+  return (
+    <Tabs
+      screenOptions={{
+        unmountOnBlur: true,
+      }}
+    />
+  );
 }
