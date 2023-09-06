@@ -33,8 +33,7 @@ export default function App() {
     return (
       <View style={styles.container}>
         <Text style={{ textAlign: "center" }}>We need your permission.</Text>
-        !cameraPermission.granted ? (
-        <Button onPress={requestCameraPermission} title="Requst Camera" />)
+        <Button onPress={requestCameraPermission} title="Requst Camera" />
       </View>
     );
   }
