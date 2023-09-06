@@ -2,9 +2,8 @@ import { router } from "expo-router";
 import { Camera, CameraType } from "expo-camera";
 import { useState, useRef } from "react";
 import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
 
-// import { Image } from "expo-image";
 import * as MediaLibrary from "expo-media-library";
 import useCameraStore from "../../utils/cameraStore";
 export default function App() {
@@ -14,57 +13,28 @@ export default function App() {
     state.setShowCamera,
   ]);
   const cameraRef = useRef<Camera>(null);
-  // const [hasCameraPermission, setHasCameraPermission] = useState();
   const [type, setType] = useState(CameraType.back);
   const [cameraPermission, requestCameraPermission] =
     Camera.useCameraPermissions();
   const [mediaPermission, requestMediaPermission] =
     MediaLibrary.usePermissions();
-  // const [photo, setPhoto] = useState<CameraCapturedPicture | null>(null);
-  // const [shouldHide, setShouldHide] = useState(false);
-  // useFocusEffect(() => {
-  //   setShouldHide(false);
-  //   return () => {
-  //     setShouldHide(true);
-  //   };
-  // });
-  // const [showCamera, setShowCamera] = useState(true);
 
-  useFocusEffect(() => {
-    console.log("focus effect");
+  const isFocused = useIsFocused();
 
-    // setShowCamera(true);
-  });
-
+  console.log({ isFocused });
   console.log({ ref: cameraRef.current });
-  console.log({ showCamera });
   console.log({ cameraPermission, mediaPermission });
 
-  if (!cameraPermission || !mediaPermission) {
-    // Camera permissions are still loading
-    return <View />;
-  }
+  // Camera is still loading
+  if (!cameraPermission) return <View />;
 
+  // Camera permissions are not granted yet
   if (!cameraPermission.granted) {
-    // Camera permissions are not granted yet
     return (
       <View style={styles.container}>
-        <Text style={{ textAlign: "center" }}>
-          We need your permission to show the camera
-        </Text>
-        <Button onPress={requestCameraPermission} title="grant permission" />
-      </View>
-    );
-  }
-
-  if (!mediaPermission.granted) {
-    // Camera permissions are not granted yet
-    return (
-      <View style={styles.container}>
-        <Text style={{ textAlign: "center" }}>
-          We need your permission to show the media
-        </Text>
-        <Button onPress={requestMediaPermission} title="grant permission" />
+        <Text style={{ textAlign: "center" }}>We need your permission.</Text>
+        !cameraPermission.granted ? (
+        <Button onPress={requestCameraPermission} title="Requst Camera" />)
       </View>
     );
   }
@@ -85,7 +55,6 @@ export default function App() {
 
     try {
       let newPhoto = await cameraRef.current.takePictureAsync(options);
-      // cameraRef.current.pausePreview();
       setPicture(newPhoto);
       setShowCamera(false);
       router.push("/camera/review");
@@ -94,25 +63,8 @@ export default function App() {
     }
   }
 
-  // if (!showCamera && photo?.uri) {
-  //   return (
-  //     <View style={styles.container}>
-  //       <Image
-  //         source={{ uri: photo.uri }}
-  //         style={{ width: 200, height: 200, flex: 1 }}
-  //         contentFit="cover"
-  //       />
-  //       <TouchableOpacity
-  //         style={styles.button}
-  //         onPress={() => setShowCamera(true)}
-  //       >
-  //         <Text style={styles.text}>Flip Camera</Text>
-  //       </TouchableOpacity>
-  //     </View>
-  //   );
-  // }
-
-  return showCamera ? null : (
+  if (!isFocused) return <View />;
+  return (
     <View style={styles.container}>
       <Text>Camera</Text>
       <Camera style={styles.camera} type={type} ref={cameraRef}>

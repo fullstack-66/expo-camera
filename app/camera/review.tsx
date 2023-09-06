@@ -2,11 +2,28 @@ import { Text, StyleSheet, View, Button, ScrollView } from "react-native";
 import { router } from "expo-router";
 import { Image } from "expo-image";
 import useCameraStore from "../../utils/cameraStore";
+import * as MediaLibrary from "expo-media-library";
+
 export default function Review() {
   const [picture, setShowCamera] = useCameraStore((state) => [
     state.picture,
     state.setShowCamera,
   ]);
+  const [mediaPermission, requestMediaPermission] =
+    MediaLibrary.usePermissions();
+
+  if (!mediaPermission) return <View />;
+  if (!mediaPermission.granted) {
+    // Media permissions are not granted yet
+    return (
+      <View style={styles.container}>
+        <Text style={{ textAlign: "center" }}>
+          We need your permission for media storage.
+        </Text>
+        <Button onPress={requestMediaPermission} title="Grant" />
+      </View>
+    );
+  }
 
   if (!picture) return <View />;
 
