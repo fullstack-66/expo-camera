@@ -8,7 +8,11 @@ import { useFocusEffect } from "@react-navigation/native";
 import * as MediaLibrary from "expo-media-library";
 import useCameraStore from "../../utils/cameraStore";
 export default function App() {
-  const [setPicture] = useCameraStore((state) => [state.setPicture]);
+  const [setPicture, showCamera, setShowCamera] = useCameraStore((state) => [
+    state.setPicture,
+    state.showCamera,
+    state.setShowCamera,
+  ]);
   const cameraRef = useRef<Camera>(null);
   // const [hasCameraPermission, setHasCameraPermission] = useState();
   const [type, setType] = useState(CameraType.back);
@@ -17,25 +21,33 @@ export default function App() {
   const [mediaPermission, requestMediaPermission] =
     MediaLibrary.usePermissions();
   // const [photo, setPhoto] = useState<CameraCapturedPicture | null>(null);
-  const [shouldHide, setShouldHide] = useState(false);
-  useFocusEffect(() => {
-    setShouldHide(false);
-    return () => {
-      setShouldHide(true);
-    };
-  });
+  // const [shouldHide, setShouldHide] = useState(false);
+  // useFocusEffect(() => {
+  //   setShouldHide(false);
+  //   return () => {
+  //     setShouldHide(true);
+  //   };
+  // });
   // const [showCamera, setShowCamera] = useState(true);
 
+  useFocusEffect(() => {
+    console.log("focus effect");
+
+    // setShowCamera(true);
+  });
+
+  console.log({ ref: cameraRef.current });
+  console.log({ showCamera });
   console.log({ cameraPermission, mediaPermission });
 
   if (!cameraPermission || !mediaPermission) {
     // Camera permissions are still loading
-    return shouldHide ? null : <View />;
+    return <View />;
   }
 
   if (!cameraPermission.granted) {
     // Camera permissions are not granted yet
-    return shouldHide ? null : (
+    return (
       <View style={styles.container}>
         <Text style={{ textAlign: "center" }}>
           We need your permission to show the camera
@@ -47,7 +59,7 @@ export default function App() {
 
   if (!mediaPermission.granted) {
     // Camera permissions are not granted yet
-    return shouldHide ? null : (
+    return (
       <View style={styles.container}>
         <Text style={{ textAlign: "center" }}>
           We need your permission to show the media
@@ -71,12 +83,15 @@ export default function App() {
       exif: false,
     };
 
-    let newPhoto = await cameraRef.current.takePictureAsync(options);
-    // cameraRef.current.pausePreview();
-    setPicture(newPhoto);
-    // setShowCamera(false);
-    router.push("/camera/review");
-    // setPhoto(newPhoto);
+    try {
+      let newPhoto = await cameraRef.current.takePictureAsync(options);
+      // cameraRef.current.pausePreview();
+      setPicture(newPhoto);
+      setShowCamera(false);
+      router.push("/camera/review");
+    } catch (err) {
+      alert(JSON.stringify(err));
+    }
   }
 
   // if (!showCamera && photo?.uri) {
@@ -97,8 +112,9 @@ export default function App() {
   //   );
   // }
 
-  return shouldHide ? null : (
+  return showCamera ? null : (
     <View style={styles.container}>
+      <Text>Camera</Text>
       <Camera style={styles.camera} type={type} ref={cameraRef}>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={toggleCameraType}>

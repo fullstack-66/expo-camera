@@ -1,8 +1,12 @@
-import { Text, StyleSheet, View, ScrollView } from "react-native";
+import { Text, StyleSheet, View, Button, ScrollView } from "react-native";
+import { router } from "expo-router";
 import { Image } from "expo-image";
 import useCameraStore from "../../utils/cameraStore";
 export default function Review() {
-  const picture = useCameraStore((state) => state.picture);
+  const [picture, setShowCamera] = useCameraStore((state) => [
+    state.picture,
+    state.setShowCamera,
+  ]);
 
   if (!picture) return <View />;
 
@@ -12,6 +16,13 @@ export default function Review() {
         source={{ uri: picture.uri }}
         style={{ width: 200, height: 200, flex: 1 }}
         contentFit="cover"
+      />
+      <Button
+        onPress={() => {
+          setShowCamera(true);
+          router.push("/camera");
+        }}
+        title="back"
       />
     </View>
   );
