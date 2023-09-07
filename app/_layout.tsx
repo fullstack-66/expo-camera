@@ -10,15 +10,18 @@ SplashScreen.preventAutoHideAsync();
 
 export default function AppLayout() {
   const [fontsLoaded] = useFonts({
-    PromptRegular: require("../assets/fonts/Prompt-Regular.ttf"),
-    PromptBold: require("../assets/fonts/Prompt-Bold.ttf"),
+    "Prompt-Regular": require("../assets/fonts/Prompt-Regular.ttf"),
+    "Prompt-Bold": require("../assets/fonts/Prompt-Bold.ttf"),
   });
 
+  console.log({ fontsLoaded });
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
       await SplashScreen.hideAsync();
     }
   }, [fontsLoaded]);
+
+  if (!fontsLoaded) return null;
 
   return (
     <View style={{ flex: 1 }} onLayout={onLayoutRootView}>

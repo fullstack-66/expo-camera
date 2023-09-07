@@ -22,14 +22,14 @@ export default function Review() {
     // Media permissions are not granted yet
     return (
       <StyledView className="flex-1 justify-center items-center">
-        <StyledText className="font-PromptRegular text-lg text-purple-800">
+        <StyledText className="font-Prompt-Regular text-lg text-purple-800">
           We need your media permission.
         </StyledText>
         <StyledTouchableOpacity
           onPress={requestMediaPermission}
           className="bg-purple-600 p-3 rounded-lg w-1/2 justify-center items-center mt-3"
         >
-          <StyledText className="text-white font-PromptRegular">
+          <StyledText className="text-white font-Prompt-Regular">
             Grant Permission
           </StyledText>
         </StyledTouchableOpacity>

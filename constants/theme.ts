@@ -11,8 +11,8 @@ const COLORS = {
   };
   
   const FONT = {
-    regular: "PromptRegular",
-    bold: "PromptBold",
+    regular: "Prompt-Regular",
+    bold: "Prompt-Bold",
   };
   
   const SIZES = {

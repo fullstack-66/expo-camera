@@ -28,14 +28,14 @@ export default function App() {
   if (!cameraPermission.granted) {
     return (
       <StyledView className="flex-1 justify-center items-center">
-        <StyledText className="font-PromptRegular text-lg text-purple-800">
+        <StyledText className="font-Prompt-Regular text-lg text-purple-800">
           We need your camera permission.
         </StyledText>
         <StyledTouchableOpacity
           onPress={requestCameraPermission}
           className="bg-purple-600 p-3 rounded-lg w-1/2 justify-center items-center mt-3"
         >
-          <StyledText className="text-white font-PromptRegular">
+          <StyledText className="text-white font-Prompt-Regular">
             Grant Permission
           </StyledText>
         </StyledTouchableOpacity>

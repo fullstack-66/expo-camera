@@ -4,8 +4,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        PromptRegular: ["PromptRegular"],
-        PromptBold: ["PromptBold"],
+        "Prompt-Regular": ["Prompt-Regular"],
+        "Prompt-Bold": ["Prompt-Bold"],
       },
     },
   },
