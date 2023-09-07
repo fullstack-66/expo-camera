@@ -24,7 +24,7 @@ export default function AppLayout() {
     <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
       <Tabs
         screenOptions={{
-          unmountOnBlur: true,
+          // unmountOnBlur: true,
           headerStyle: {
             backgroundColor: COLORS.primary,
           },

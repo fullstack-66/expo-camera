@@ -1,74 +1,71 @@
-import { Text, StyleSheet, View, Button, ScrollView } from "react-native";
-import { router } from "expo-router";
-import { Image } from "expo-image";
 import useCameraStore from "../../utils/cameraStore";
 import * as MediaLibrary from "expo-media-library";
+import {
+  StyledView,
+  StyledText,
+  StyledTouchableOpacity,
+  StyledIcon,
+  StyledImageBackground,
+} from "../../utils/nativewind-styled";
+import { router } from "expo-router";
 
 export default function Review() {
-  const [picture, setShowCamera] = useCameraStore((state) => [
+  const [picture, setPicture] = useCameraStore((state) => [
     state.picture,
-    state.setShowCamera,
+    state.setPicture,
   ]);
   const [mediaPermission, requestMediaPermission] =
     MediaLibrary.usePermissions();
 
-  if (!mediaPermission) return <View />;
+  if (!mediaPermission || !picture) return <StyledView />;
   if (!mediaPermission.granted) {
     // Media permissions are not granted yet
     return (
-      <View style={styles.container}>
-        <Text style={{ textAlign: "center" }}>
-          We need your permission for media storage.
-        </Text>
-        <Button onPress={requestMediaPermission} title="Grant" />
-      </View>
+      <StyledView className="flex-1 justify-center items-center">
+        <StyledText className="font-PromptRegular text-lg text-purple-800">
+          We need your media permission.
+        </StyledText>
+        <StyledTouchableOpacity
+          onPress={requestMediaPermission}
+          className="bg-purple-600 p-3 rounded-lg w-1/2 justify-center items-center mt-3"
+        >
+          <StyledText className="text-white font-PromptRegular">
+            Grant Permission
+          </StyledText>
+        </StyledTouchableOpacity>
+      </StyledView>
     );
   }
 
-  if (!picture) return <View />;
+  function savePhoto() {
+    MediaLibrary.saveToLibraryAsync(picture!.uri).then(() => {
+      setPicture(null);
+      alert("Photo Saved");
+      router.push("/camera");
+    });
+  }
 
   return (
-    <View style={styles.container}>
-      <Image
-        source={{ uri: picture.uri }}
-        style={{ width: 200, height: 200, flex: 1 }}
-        contentFit="cover"
-      />
-      <Button
-        onPress={() => {
-          setShowCamera(true);
-          router.push("/camera");
-        }}
-        title="back"
-      />
-    </View>
+    <StyledView className="flex-1 p-6">
+      <StyledView className="flex-1 rounded-2xl overflow-hidden">
+        <StyledImageBackground
+          source={{ uri: picture.uri }}
+          className="flex-1 h-full justify-end"
+        >
+          <StyledView className="flex-row bg-purple-400/75 p-3 rounded-lg">
+            <StyledTouchableOpacity
+              className="flex-1 justify-center items-center"
+              onPress={savePhoto}
+            >
+              <StyledIcon
+                name="save-outline"
+                size={30}
+                className="text-white"
+              />
+            </StyledTouchableOpacity>
+          </StyledView>
+        </StyledImageBackground>
+      </StyledView>
+    </StyledView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-  },
-  camera: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  buttonContainer: {
-    flex: 1,
-    flexDirection: "column",
-    backgroundColor: "transparent",
-    margin: 64,
-  },
-  button: {
-    flex: 1,
-    alignSelf: "flex-end",
-    alignItems: "center",
-  },
-  text: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "white",
-  },
-});

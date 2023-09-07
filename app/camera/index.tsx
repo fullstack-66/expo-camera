@@ -12,11 +12,7 @@ import {
 import useCameraStore from "../../utils/cameraStore";
 
 export default function App() {
-  const [setPicture, showCamera, setShowCamera] = useCameraStore((state) => [
-    state.setPicture,
-    state.showCamera,
-    state.setShowCamera,
-  ]);
+  const [setPicture] = useCameraStore((state) => [state.setPicture]);
   const cameraRef = useRef<Camera>(null);
   const [type, setType] = useState(CameraType.back);
   const [cameraPermission, requestCameraPermission] =
@@ -64,7 +60,6 @@ export default function App() {
     try {
       let newPhoto = await cameraRef.current.takePictureAsync(options);
       setPicture(newPhoto);
-      setShowCamera(false);
       router.push("/camera/review");
     } catch (err) {
       alert(JSON.stringify(err));
@@ -87,7 +82,6 @@ export default function App() {
               className="text-white"
             />
           </StyledTouchableOpacity>
-
           <StyledTouchableOpacity
             onPress={takePicture}
             className="flex-1 items-center justify-center"

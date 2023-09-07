@@ -1,6 +1,4 @@
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { Stack, Link } from "expo-router";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import { Stack } from "expo-router";
 
 export default function TodoLayout() {
   return (
@@ -8,26 +6,15 @@ export default function TodoLayout() {
       <Stack.Screen
         name="index"
         options={{
-          title: "| My Todos",
-          headerRight: () => <AboutMenu />,
+          title: "| Camera",
         }}
       />
       <Stack.Screen
         name="review"
         options={{
-          title: "About",
+          title: "Review",
         }}
       />
     </Stack>
   );
 }
-
-const AboutMenu = () => {
-  return (
-    <Link href="/todo/about">
-      <TouchableOpacity onPress={() => {}} style={{ paddingRight: 10 }}>
-        <Ionicons name="help-circle-outline" size={32} />
-      </TouchableOpacity>
-    </Link>
-  );
-};
