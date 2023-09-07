@@ -4,10 +4,10 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        prompt: ["PromptRegular"],
+        PromptRegular: ["PromptRegular"],
+        PromptBold: ["PromptBold"],
       },
     },
   },
   plugins: [],
-}
-
+};
